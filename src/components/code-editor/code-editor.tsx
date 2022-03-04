@@ -4,7 +4,7 @@ import { View, Alert, Button } from "react-native";
 import { DownloadDirectoryPath, readFile } from "react-native-fs";
 import { useTestFile } from "./gen-test";
 
-import html from "./index.html";
+import html from "../../../editor/dist/index.html";
 const path = DownloadDirectoryPath + "/test.txt";
 
 export const MonacoEditor = () => {
@@ -15,6 +15,9 @@ export const MonacoEditor = () => {
   return (
     <View style={{ backgroundColor: "red", flex: 1 }}>
       <WebView
+        setBuiltInZoomControls={false}
+        setDisplayZoomControls={false}
+        minimumFontSize={16}
         ref={webviewRef}
         source={{ html }}
         allowFileAccess={true}
@@ -25,7 +28,7 @@ export const MonacoEditor = () => {
         }}
       />
       <Button
-        title={"Click"}
+        title={"Read from file"}
         onPress={async () => {
           if (!webviewRef.current) return;
           console.log(path);

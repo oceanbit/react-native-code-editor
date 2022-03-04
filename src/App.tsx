@@ -4,7 +4,7 @@ import {
   StatusBar,
   useColorScheme,
 } from "react-native";
-import { MonacoEditor } from "./components/monaco";
+import { MonacoEditor } from "./components/code-editor";
 
 const App = () => {
   const isDarkMode = useColorScheme() === "dark";
