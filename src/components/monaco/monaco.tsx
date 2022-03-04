@@ -16,7 +16,6 @@ export const MonacoEditor = () => {
     <View style={{ backgroundColor: "red", flex: 1 }}>
       <WebView
         ref={webviewRef}
-        textZoom={300}
         source={{ html }}
         allowFileAccess={true}
         allowUniversalAccessFromFileURLs={true}
