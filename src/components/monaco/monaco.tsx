@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
 import { View, Alert, Button } from "react-native";
-import { DownloadDirectoryPath, stat, writeFile } from "react-native-fs";
+import { DownloadDirectoryPath, readFile } from "react-native-fs";
+import { useTestFile } from "./gen-test";
+
 const path = DownloadDirectoryPath + "/test.txt";
 
 export const MonacoEditor = () => {
@@ -18,31 +20,23 @@ export const MonacoEditor = () => {
         window.onerror = function(...props) {
           alert(props);
         }
-        el.addEventListener('click', function () {
+        el.addEventListener('click', async function () {
           window.ReactNativeWebView.postMessage("Hello!")
         });
         document.addEventListener("openfile", (e) => {
-          document.querySelector('#contents').innerHTML = JSON.stringify(e.detail);
+          try {
+            alert(e.detail.data);
+            document.querySelector('#contents').innerHTML = e.detail.data;
+          } catch(e) {
+            alert(e)
+          }
         })
         </script>
       </body>
       </html>
     `;
 
-  useEffect(() => {
-    stat(path)
-      .then((stat) => {
-        if (!stat.isFile()) {
-          return writeFile(path, "Testing hello 123");
-        }
-      })
-      .catch((err) => {
-        if (err.message.includes("File does not exist")) {
-          return writeFile(path, "Testing hello 123");
-        }
-        console.error(err);
-      });
-  }, []);
+  useTestFile(path);
 
   return (
     <View style={{ backgroundColor: "red", flex: 1 }}>
@@ -59,14 +53,15 @@ export const MonacoEditor = () => {
       />
       <Button
         title={"Click"}
-        onPress={() => {
+        onPress={async () => {
           if (!webviewRef.current) return;
           console.log(path);
+          const result = await readFile(path);
           const script = `
             (function() {
               const ev = new CustomEvent("openfile", {
                 detail: {
-                  path: "${path}",
+                  data: ${JSON.stringify(result)},
                 }
               });
               document.dispatchEvent(ev);
