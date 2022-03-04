@@ -1,0 +1,24 @@
+<html>
+  <head></head>
+  <body>
+    <button style="font-size: 1rem" id="clickme">Click Me</button>
+    <p id="contents"></p>
+    <script>
+      const el = document.querySelector("#clickme");
+      window.onerror = function (...props) {
+        alert(props);
+      };
+      el.addEventListener("click", async function () {
+        window.ReactNativeWebView.postMessage("Hello!");
+      });
+      document.addEventListener("openfile", (e) => {
+        try {
+          alert(e.detail.data);
+          document.querySelector("#contents").innerHTML = e.detail.data;
+        } catch (e) {
+          alert(e);
+        }
+      });
+    </script>
+  </body>
+</html>

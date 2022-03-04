@@ -1,40 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
 import { View, Alert, Button } from "react-native";
 import { DownloadDirectoryPath, readFile } from "react-native-fs";
 import { useTestFile } from "./gen-test";
 
+import html from "./index.html";
 const path = DownloadDirectoryPath + "/test.txt";
 
 export const MonacoEditor = () => {
   const webviewRef = useRef<WebView<any>>(null);
-
-  const html = `
-      <html>
-      <head></head>
-      <body>
-        <button style="font-size: 1rem" id="clickme">Click Me</button>
-        <p id="contents"></p>
-        <script>
-        const el = document.querySelector('#clickme');
-        window.onerror = function(...props) {
-          alert(props);
-        }
-        el.addEventListener('click', async function () {
-          window.ReactNativeWebView.postMessage("Hello!")
-        });
-        document.addEventListener("openfile", (e) => {
-          try {
-            alert(e.detail.data);
-            document.querySelector('#contents').innerHTML = e.detail.data;
-          } catch(e) {
-            alert(e)
-          }
-        })
-        </script>
-      </body>
-      </html>
-    `;
 
   useTestFile(path);
 
